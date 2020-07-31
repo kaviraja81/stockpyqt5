@@ -84,7 +84,7 @@ class Ui_MainWindow(object):
         self.tableWidget_3.setColumnCount(1)
         self.tableWidget_3.setObjectName("tableWidget_3")
       
-        
+      
         stockprice,initialtime=stockapi.get_stock_data()
         fundamentaldata=stockapi.get_fundamental_stockdata() 
         self.create_tables()    
