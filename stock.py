@@ -15,9 +15,10 @@ import stockapi
 import datetime 
 
 class Ui_MainWindow(object):
+      
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(1000, 600)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
@@ -25,18 +26,85 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName("pushButton")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(70, 55, 161, 31))
-        self.label2 = QtWidgets.QLabel(self.centralwidget)
-        self.label2.setGeometry(QtCore.QRect(70, 155, 161, 31))
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(80, 120, 121, 20))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.setGeometry(QtCore.QRect(220, 120, 121, 20))
+        font = QtGui.QFont()
+        font.setFamily("Arial Black")
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+    
+        self.label_4 = QtWidgets.QLabel(self.centralwidget)
+        self.label_4.setGeometry(QtCore.QRect(70, 400, 121, 20))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+
+        self.label_5 = QtWidgets.QLabel(self.centralwidget)
+        self.label_5.setGeometry(QtCore.QRect(250, 150, 200, 20))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_5.setFont(font)
+        self.label_5.setObjectName("label_5")
+
+
         self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        self.tableWidget.setGeometry(QtCore.QRect(40, 160, 691, 271))
-        self.tableWidget.setAlternatingRowColors(True)
+        self.tableWidget.setGeometry(QtCore.QRect(70, 420, 671, 141))
+        self.tableWidget.setRowCount(8)
+        self.tableWidget.setColumnCount(5)
         self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setAlternatingRowColors(True)
+        self.tableWidget_2 = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget_2.setGeometry(QtCore.QRect(70, 180, 256, 211))
+        self.tableWidget_2.setRowCount(5)
+        self.tableWidget_2.setColumnCount(1)
+        self.tableWidget_2.setObjectName("tableWidget_2")
+        
+
+        self.tableWidget_3 = QtWidgets.QTableWidget(self.centralwidget)
+        self.tableWidget_3.setGeometry(QtCore.QRect(410, 180, 256, 211))
+        self.tableWidget_3.setRowCount(4)
+        self.tableWidget_3.setColumnCount(1)
+        self.tableWidget_3.setObjectName("tableWidget_3")
+      
+        
+        stockprice,initialtime=stockapi.get_stock_data()
+        fundamentaldata=stockapi.get_fundamental_stockdata() 
+        self.create_tables()    
+        self.insert_tables(stockprice,initialtime)
+        self.insert_fundamental_into_tables(fundamentaldata)
+
+
+
+
+        # self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
+        # self.tableWidget.setGeometry(QtCore.QRect(40, 160, 691, 271))
+        # self.tableWidget.setAlternatingRowColors(True)
+        # self.tableWidget.setObjectName("tableWidget")
 
         font = QtGui.QFont()
         font.setFamily("MS Sans Serif")
         font.setPointSize(12)
         self.label.setFont(font)
         self.label.setObjectName("label")
+        
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(250, 50, 171, 41))
         self.lineEdit.setObjectName("lineEdit")
@@ -58,27 +126,27 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Submit"))
         self.pushButton.clicked.connect(self.button_click)
         self.label.setText(_translate("MainWindow", "Enter your Stock Code"))
-#         self.lineEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-# "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-# "p, li { white-space: pre-wrap; }\n"
-# "</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-# "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> </p></body></html>"))
+        self.label_2.setText(_translate("MainWindow", "Stock Name"))
+        self.label_3.setText(_translate("MainWindow", "IBM"))
+        self.label_4.setText(_translate("MainWindow","Daily Stock Price "))
+        self.label_5.setText(_translate("MainWindow","Fundamental Stock Data"))
+
 
     def button_click(self):
         self.update()
         
         stockprice,initialtime=stockapi.get_stock_data(self.lineEdit.text())
-        
-     #   print(stockprice)
-        
-        self.create_tables()           
+        fundamentaldata=stockapi.get_fundamental_stockdata(self.lineEdit.text()) 
+          
+        self.create_tables()    
         self.insert_tables(stockprice,initialtime)
-
+        self.insert_fundamental_into_tables(fundamentaldata)
     def update(self):
+
         self.label.adjustSize()
-  
-    def create_tables(self):
        
+    def create_tables(self):
+
         self.tableWidget.setRowCount(10)
         self.tableWidget.setColumnCount(6)
         self.tableWidget.setItem(0,0,QTableWidgetItem("Date/Time"))
@@ -87,7 +155,20 @@ class Ui_MainWindow(object):
         self.tableWidget.setItem(0,3,QTableWidgetItem("Low"))
         self.tableWidget.setItem(0,4,QTableWidgetItem("Close"))
         self.tableWidget.setItem(0,5,QTableWidgetItem("Volume"))
-      
+
+       # item = self.tableWidget_2.verticalHeaderItem(0)
+        self.tableWidget_2.setVerticalHeaderItem(0,QTableWidgetItem("Market (in B)"))
+        self.tableWidget_2.setVerticalHeaderItem(1,QTableWidgetItem("EPS"))
+        self.tableWidget_2.setVerticalHeaderItem(2,QTableWidgetItem("PE Ratio"))
+        self.tableWidget_2.setVerticalHeaderItem(3,QTableWidgetItem("Price to Book Ratio"))
+        self.tableWidget_2.setVerticalHeaderItem(4,QTableWidgetItem("Revenue Per Share"))
+
+        self.tableWidget_3.setVerticalHeaderItem(0,QTableWidgetItem("52 Week High"))
+        self.tableWidget_3.setVerticalHeaderItem(1,QTableWidgetItem("52 Week Low"))
+        self.tableWidget_3.setVerticalHeaderItem(2,QTableWidgetItem("50 Day Moving Average"))
+        self.tableWidget_3.setVerticalHeaderItem(3,QTableWidgetItem("200 Day Moving Average"))
+       
+        
     def insert_tables(self,stockprice,initialtime):
         
         i=1
@@ -103,7 +184,22 @@ class Ui_MainWindow(object):
             if i > 10:
                 break
 
+    def insert_fundamental_into_tables(self,stockfundamental):
         
+            onebillion=1000000000
+            marketcap=int(stockfundamental['MarketCapitalization'])/onebillion
+            print(marketcap)
+            self.tableWidget_2.setItem(0,0,QTableWidgetItem(str(marketcap)))
+            self.tableWidget_2.setItem(0,1,QTableWidgetItem(stockfundamental['EPS']))
+            self.tableWidget_2.setItem(0,2,QTableWidgetItem(stockfundamental['PERatio']))
+            self.tableWidget_2.setItem(0,3,QTableWidgetItem(stockfundamental['PriceToBookRatio']))
+            self.tableWidget_2.setItem(0,4,QTableWidgetItem(stockfundamental['RevenuePerShareTTM']))
+            
+            self.tableWidget_3.setItem(0,0,QTableWidgetItem(stockfundamental['52WeekHigh']))
+            self.tableWidget_3.setItem(0,1,QTableWidgetItem(stockfundamental['52WeekLow']))
+            self.tableWidget_3.setItem(0,2,QTableWidgetItem(stockfundamental['50DayMovingAverage']))
+            self.tableWidget_3.setItem(0,3,QTableWidgetItem(stockfundamental['200DayMovingAverage']))
+                       
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
