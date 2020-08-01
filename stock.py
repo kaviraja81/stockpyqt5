@@ -135,7 +135,8 @@ class Ui_MainWindow(object):
         
         stockprice,initialtime=stockdata.get_stock_data(self.lineEdit.text())
         fundamentaldata=stockdata.get_fundamental_stockdata(self.lineEdit.text()) 
-          
+        
+        self.label_3.setText(self.lineEdit.text())
         self.create_tables()    
         self.insert_tables(stockprice,initialtime)
         self.insert_fundamental_into_tables(fundamentaldata)
@@ -172,6 +173,7 @@ class Ui_MainWindow(object):
     # Function insert_tables is used to insert daily price records in the screen 
     #     Only 10 days record are showed on the screen
     def insert_tables(self,stockprice,initialtime):
+        
         
         i=1
         for key,value in stockprice.items():
