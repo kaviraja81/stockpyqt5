@@ -16,6 +16,8 @@ import datetime
 
 class Ui_MainWindow(object):
       
+#This function @setupUi is used to set up the Pyqt5 UI with the required labels, Table Widgets
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1000, 600)
@@ -85,19 +87,11 @@ class Ui_MainWindow(object):
         self.tableWidget_3.setObjectName("tableWidget_3")
       
       
-        stockprice,initialtime=stockapi.get_stock_data()
-        fundamentaldata=stockapi.get_fundamental_stockdata() 
+        stockprice,initialtime=stockdata.get_stock_data()
+        fundamentaldata=stockdata.get_fundamental_stockdata() 
         self.create_tables()    
         self.insert_tables(stockprice,initialtime)
         self.insert_fundamental_into_tables(fundamentaldata)
-
-
-
-
-        # self.tableWidget = QtWidgets.QTableWidget(self.centralwidget)
-        # self.tableWidget.setGeometry(QtCore.QRect(40, 160, 691, 271))
-        # self.tableWidget.setAlternatingRowColors(True)
-        # self.tableWidget.setObjectName("tableWidget")
 
         font = QtGui.QFont()
         font.setFamily("MS Sans Serif")
@@ -132,19 +126,27 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow","Fundamental Stock Data"))
 
 
+    #When the Submit Button is clicked, this function is called. Here, the StockAPI program is called and two functions
+    # get_stock_data is called to get stock daily prices and get_fundamental_stockdata is called to get fundamental data
+    # of the stock. Then the table widgets are called to insert record into the UI 
+
     def button_click(self):
         self.update()
         
-        stockprice,initialtime=stockapi.get_stock_data(self.lineEdit.text())
-        fundamentaldata=stockapi.get_fundamental_stockdata(self.lineEdit.text()) 
+        stockprice,initialtime=stockdata.get_stock_data(self.lineEdit.text())
+        fundamentaldata=stockdata.get_fundamental_stockdata(self.lineEdit.text()) 
           
         self.create_tables()    
         self.insert_tables(stockprice,initialtime)
         self.insert_fundamental_into_tables(fundamentaldata)
+
+# This function is called to adjust size of the label after the Header items are set in the Table Widget
     def update(self):
 
         self.label.adjustSize()
        
+# Function Create_tables
+# This function is called to create the header items of all the table widgets
     def create_tables(self):
 
         self.tableWidget.setRowCount(10)
@@ -156,7 +158,6 @@ class Ui_MainWindow(object):
         self.tableWidget.setItem(0,4,QTableWidgetItem("Close"))
         self.tableWidget.setItem(0,5,QTableWidgetItem("Volume"))
 
-       # item = self.tableWidget_2.verticalHeaderItem(0)
         self.tableWidget_2.setVerticalHeaderItem(0,QTableWidgetItem("Market (in B)"))
         self.tableWidget_2.setVerticalHeaderItem(1,QTableWidgetItem("EPS"))
         self.tableWidget_2.setVerticalHeaderItem(2,QTableWidgetItem("PE Ratio"))
@@ -168,7 +169,8 @@ class Ui_MainWindow(object):
         self.tableWidget_3.setVerticalHeaderItem(2,QTableWidgetItem("50 Day Moving Average"))
         self.tableWidget_3.setVerticalHeaderItem(3,QTableWidgetItem("200 Day Moving Average"))
        
-        
+    # Function insert_tables is used to insert daily price records in the screen 
+    #     Only 10 days record are showed on the screen
     def insert_tables(self,stockprice,initialtime):
         
         i=1
@@ -184,11 +186,12 @@ class Ui_MainWindow(object):
             if i > 10:
                 break
 
+# Fundamental Data of the stock is inserted into the UI
+
     def insert_fundamental_into_tables(self,stockfundamental):
         
             onebillion=1000000000
             marketcap=int(stockfundamental['MarketCapitalization'])/onebillion
-            print(marketcap)
             self.tableWidget_2.setItem(0,0,QTableWidgetItem(str(marketcap)))
             self.tableWidget_2.setItem(0,1,QTableWidgetItem(stockfundamental['EPS']))
             self.tableWidget_2.setItem(0,2,QTableWidgetItem(stockfundamental['PERatio']))
@@ -205,6 +208,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
+    stockdata= stockapi.apicallstock()
     ui.setupUi(MainWindow)
     
     MainWindow.show()
